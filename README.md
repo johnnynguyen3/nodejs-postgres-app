@@ -6,6 +6,7 @@ StudentID: 101185885
 ## Description
 
 Node.js application which makes use of the node-postgres package to interact with a PostGres database and perform CRUD operations.
+Additionally uses node:readline module to maintain user input loop.
 
 
 ## Instruction to run

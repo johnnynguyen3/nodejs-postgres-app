@@ -1,5 +1,10 @@
 const  { Pool } = require('pg');
 const path = require('path');
+const readLine = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
 require('dotenv').config({
     override: true,
     path: path.join(__dirname, 'db.env')
@@ -60,44 +65,66 @@ async function deleteStudent(student_id) {
 
 /* Asynchonous block containing demonstation cases for each CRUD operation */
 (async() => {
-    
+    console.log("Node.js Application with PostgreSQL Database Interation ")
+    console.log("===================================================================");
+    console.log("Operations:")
+    console.log("1. Read - getAllStudents()");
+    console.log("2. Write - addStudent(first_name,last_name,email,enrollment_date)");
+    console.log("3. Update - updateStudentEmail(new_email, student_id)");
+    console.log("4. Delete - deleteStudent(student_id)");
+    console.log("5. Exit - exits program")
+    console.log("===================================================================");
 
-    /**
-     * 1. getAllStudents() - Read Demo 
-     */
-    console.log(`Executing getAllStudents()..`);
-    let students = await getAllStudents();
-    for(let student of students){
-        console.log(student);
+    var promptUser = function () {
+        readLine.question("Specify operation (0-5): ", async input => {
+            if(parseInt(input) == 1){
+                /**
+                 * 1. getAllStudents() - Read Demo 
+                 */
+                console.log(`Executing getAllStudents()..`);
+                let students = await getAllStudents();
+                for(let student of students){
+                    console.log(student);
+                }
+            }else if(parseInt(input) == 2){
+                /**
+                 * 2. addStudent(first_name,last_name,email,enrollment_date) - Write Demo
+                 */
+                console.log("Executing addStudent()...");
+                console.log("Adding new student with name 'Jayson'");
+                let newStudent = await addStudent('Jayson','Tatum','jayson.tatum@example.com', new Date());
+                console.log(newStudent);
+                console.log("Adding new student with name 'Wardell'");
+                let newStudent2 = await addStudent('Stephen','Curry','wardell.curry@warriors.com', new Date());
+                console.log(newStudent2);
+            }else if(parseInt(input) == 3){
+                /**
+                 * 3. updateStudentEmail(new_email, student_id) - Update Demo
+                 */
+                console.log("Executing updateStudentEmail");
+                console.log(`updating email for student ${4}`);
+                let updatedEmail = await updateStudentEmail(4,'tatum.jayson@celtics.com');
+                console.log(updatedEmail);
+            }else if(parseInt(input) == 4) {
+                /**
+                 * 4. deleteStudent(student_id) - Delete Demo
+                 */
+                console.log("Executing deleteStudent()...");
+                console.log(`Deleting student with id=${5}`); //Expected student: Wardell Curry
+                let deletedStudent = await deleteStudent(5);
+                console.log(deletedStudent);
+            }
+            if(parseInt(input) == 5){
+
+                console.log("Exiting application...");
+                pool.end();
+                readLine.close();
+            } else {
+                console.log("Not a valid input please try again");
+                promptUser();
+            }
+        })
     }
-
-    /**
-     * 2. addStudent(first_name,last_name,email,enrollment_date) - Write Demo
-     */
-    console.log("Executing addStudent()...");
-    console.log("Adding new student with name 'Jayson'");
-    let newStudent = await addStudent('Jayson','Tatum','jayson.tatum@example.com', new Date());
-    console.log(newStudent);
-    console.log("Adding new student with name 'Wardell'");
-    let newStudent2 = await addStudent('Stephen','Curry','wardell.curry@warriors.com', new Date());
-    console.log(newStudent2);
-
-    /**
-     * 3. updateStudentEmail(new_email, student_id) - Update Demo
-     */
-    console.log("Executing updateStudentEmail");
-    console.log(`updating email for student ${4}`);
-    let updatedEmail = await updateStudentEmail(4,'tatum.jayson@celtics.com');
-    console.log(updatedEmail);
-
-    /**
-     * 4. deleteStudent(student_id) - Delete Demo
-     */
-    console.log("Executing deleteStudent()...");
-    console.log(`Deleting student with id=${5}`); //Expected student: Wardell Curry
-    let deletedStudent = await deleteStudent(5);
-    console.log(deletedStudent);
-    // Close the pool when finished
-    pool.end();
+    promptUser(); //Call to initiate application loop
 })();
 

@@ -20,3 +20,7 @@ CRUD operations
 2. addStudent(first_name,last_name,email,enrollment_date) - Function that performs query to insert record for new student (Write)
 3. updateStudentEmail(student_id,new_email) - Function that performs a query to update email for speicifc record by student_id (Update)
 4. deleteStudent(student_id) - Function that performs a query to delete student record by id (Delete)
+
+## Demo
+
+A demonstation of the application can be found [here](https://www.youtube.com/watch?v=8pWd-VKLgUU&feature=youtu.be).

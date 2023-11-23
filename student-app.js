@@ -1,10 +1,11 @@
 const  { Pool } = require('pg');
 const path = require('path');
-const readLine = require('readline').createInterface({
+const readline = require('readline');
+
+let r1 = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-
 require('dotenv').config({
     override: true,
     path: path.join(__dirname, 'db.env')
@@ -62,7 +63,6 @@ async function deleteStudent(student_id) {
     }
 }
 
-
 /* Asynchonous block containing demonstation cases for each CRUD operation */
 (async() => {
     console.log("Node.js Application with PostgreSQL Database Interation ")
@@ -70,14 +70,17 @@ async function deleteStudent(student_id) {
     console.log("Operations:")
     console.log("1. Read - getAllStudents()");
     console.log("2. Write - addStudent(first_name,last_name,email,enrollment_date)");
-    console.log("3. Update - updateStudentEmail(new_email, student_id)");
+    console.log("3. Update - updateStudentEmail(student_id,new_email)");
     console.log("4. Delete - deleteStudent(student_id)");
     console.log("5. Exit - exits program")
     console.log("===================================================================");
 
+    //Function to prompt for user input & input handling
     var promptUser = function () {
-        readLine.question("Specify operation (0-5): ", async input => {
-            if(parseInt(input) == 1){
+        console.log("Specify Operation (0-5)")
+        r1.question("If parameters are necessary, seperate with spaces in-between: ", async input => {
+            var arrayinputs = input.trim().split(/\s+/);
+            if(parseInt(arrayinputs[0]) == 1){
                 /**
                  * 1. getAllStudents() - Read Demo 
                  */
@@ -86,41 +89,60 @@ async function deleteStudent(student_id) {
                 for(let student of students){
                     console.log(student);
                 }
+
                 promptUser();
-            }else if(parseInt(input) == 2){
+            }else if(parseInt(arrayinputs[0]) == 2){
                 /**
                  * 2. addStudent(first_name,last_name,email,enrollment_date) - Write Demo
                  */
+                //Formats parameters
+                let firstName = arrayinputs[1];
+                let lastName = arrayinputs[2];
+                let email = arrayinputs[3];
+                let enrollmentDate = new Date(arrayinputs[4]);
                 console.log("Executing addStudent()...");
-                console.log("Adding new student with name 'Jayson'");
-                let newStudent = await addStudent('Jayson','Tatum','jayson.tatum@example.com', new Date());
+                console.log(`Adding new student with name: ${firstName} ${lastName}`);
+
+                //Calls write function addStudent() to initiate DB query.
+                let newStudent = await addStudent(firstName,lastName,email, enrollmentDate);
                 console.log(newStudent);
-                console.log("Adding new student with name 'Wardell'");
-                let newStudent2 = await addStudent('Stephen','Curry','wardell.curry@warriors.com', new Date());
-                console.log(newStudent2);
+
                 promptUser();
-            }else if(parseInt(input) == 3){
+            }else if(parseInt(arrayinputs[0]) == 3){
                 /**
-                 * 3. updateStudentEmail(new_email, student_id) - Update Demo
+                 * 3. updateStudentEmail(student_id, new_email) - Update Demo
                  */
+                //Format parameters
+                let studentID = parseInt(arrayinputs[1]);
+                let newEmail = arrayinputs[2];
                 console.log("Executing updateStudentEmail");
-                console.log(`updating email for student ${4}`);
-                let updatedEmail = await updateStudentEmail(4,'tatum.jayson@celtics.com');
+                console.log(`updating email for student ${studentID}`);
+
+
+                //Calls update function updateStudentEmail() to initiate DB query.
+                let updatedEmail = await updateStudentEmail(studentID,newEmail);
                 console.log(updatedEmail);
+
                 promptUser();
-            }else if(parseInt(input) == 4) {
+            }else if(parseInt(arrayinputs[0]) == 4) {
                 /**
                  * 4. deleteStudent(student_id) - Delete Demo
                  */
+
+                //Format parameters
+                let studentID = arrayinputs[1];
                 console.log("Executing deleteStudent()...");
-                console.log(`Deleting student with id=${5}`); //Expected student: Wardell Curry
-                let deletedStudent = await deleteStudent(5);
+                console.log(`Deleting student with id=${studentID}`);
+
+                //Calls delete function deleteStudent() to initiate DB query.
+                let deletedStudent = await deleteStudent(studentID);
                 console.log(deletedStudent);
+
                 promptUser();
-            }else if(parseInt(input) == 5){
+            }else if(parseInt(arrayinputs[0]) == 5){
                 console.log("Exiting application...");
                 pool.end();
-                readLine.close();
+                r1.close();
             } else {
                 console.log("Not a valid input please try again");
                 promptUser();

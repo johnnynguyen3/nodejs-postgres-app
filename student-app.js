@@ -86,6 +86,7 @@ async function deleteStudent(student_id) {
                 for(let student of students){
                     console.log(student);
                 }
+                promptUser();
             }else if(parseInt(input) == 2){
                 /**
                  * 2. addStudent(first_name,last_name,email,enrollment_date) - Write Demo
@@ -97,6 +98,7 @@ async function deleteStudent(student_id) {
                 console.log("Adding new student with name 'Wardell'");
                 let newStudent2 = await addStudent('Stephen','Curry','wardell.curry@warriors.com', new Date());
                 console.log(newStudent2);
+                promptUser();
             }else if(parseInt(input) == 3){
                 /**
                  * 3. updateStudentEmail(new_email, student_id) - Update Demo
@@ -105,6 +107,7 @@ async function deleteStudent(student_id) {
                 console.log(`updating email for student ${4}`);
                 let updatedEmail = await updateStudentEmail(4,'tatum.jayson@celtics.com');
                 console.log(updatedEmail);
+                promptUser();
             }else if(parseInt(input) == 4) {
                 /**
                  * 4. deleteStudent(student_id) - Delete Demo
@@ -113,9 +116,8 @@ async function deleteStudent(student_id) {
                 console.log(`Deleting student with id=${5}`); //Expected student: Wardell Curry
                 let deletedStudent = await deleteStudent(5);
                 console.log(deletedStudent);
-            }
-            if(parseInt(input) == 5){
-
+                promptUser();
+            }else if(parseInt(input) == 5){
                 console.log("Exiting application...");
                 pool.end();
                 readLine.close();
